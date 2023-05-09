@@ -5,7 +5,8 @@ using UnityEngine;
 public class Shooter : MonoBehaviour
 {
     public GameObject[] candyPrefabs; // 配列にしてキャンディをすべて入れる
-    public Transform candyParentTransform; // からのゲームオブジェクト「candies」の位置情報
+    public Transform candyParentTransform; // 空のゲームオブジェクト「candies」の位置情報
+    public CandyManager candyManager;
     public float shotForce;
     public float shotTorque;
     public float baseWidth;
@@ -13,7 +14,7 @@ public class Shooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -22,8 +23,13 @@ public class Shooter : MonoBehaviour
         if (Input.GetButtonDown("Fire1")) Shot();
     }
 
-    void Shot()
+    public void Shot()
     {
+        if (candyManager.GetCandyAmount() <= 0)
+        {
+            return;
+        }
+
         GameObject SelectCandy()
         {
             int select = Random.Range(0, candyPrefabs.Length);
@@ -43,5 +49,9 @@ public class Shooter : MonoBehaviour
         Rigidbody candyRigidbody = candy.GetComponent<Rigidbody>(); // candyからRigidbodyの部分のみ取り出し
         candyRigidbody.AddForce(transform.forward * shotForce); // 力を加える
         candyRigidbody.AddTorque(new Vector3(0, shotTorque, 0)); // ねじりの強さ
+
+        // 消費
+        candyManager.ConsumeCandy();
+    
     }
 }
