@@ -4,6 +4,11 @@ using UnityEngine;
 
 public class Shooter : MonoBehaviour
 {
+    const int MaxShotPower = 5;
+    const int RecoverySeconds = 3;
+
+    int shotPower = MaxShotPower;
+
     public GameObject[] candyPrefabs; // 配列にしてキャンディをすべて入れる
     public Transform candyParentTransform; // 空のゲームオブジェクト「candies」の位置情報
     public CandyManager candyManager;
@@ -25,7 +30,7 @@ public class Shooter : MonoBehaviour
 
     public void Shot()
     {
-        if (candyManager.GetCandyAmount() <= 0)
+        if (candyManager.GetCandyAmount() <= 0 || shotPower <= 0)
         {
             return;
         }
@@ -50,8 +55,31 @@ public class Shooter : MonoBehaviour
         candyRigidbody.AddForce(transform.forward * shotForce); // 力を加える
         candyRigidbody.AddTorque(new Vector3(0, shotTorque, 0)); // ねじりの強さ
 
-        // 消費
-        candyManager.ConsumeCandy();
-    
+        candyManager.ConsumeCandy(); // 消費
+        ConsumePower(); // パワー消費
+
+        void OnGUI() // 画面出力
+        {
+            GUI.color = Color.black; // 色を黒に設定
+            string label = "";
+            for(int i = 0; i < shotPower; i++)
+            {
+                label = label + "+";
+            }
+            GUI.Label(new Rect(50, 65, 100, 30), label);
+        }
+
+        void ConsumePower() // パワー消費
+        {
+            shotPower--;
+            StartCoroutine(RecoverPower()); // パワー回復用
+        }
+
+        IEnumerator RecoverPower()
+        {
+            yield return new WaitForSeconds(RecoverySeconds);
+            shotPower++;
+        }
+
     }
 }
