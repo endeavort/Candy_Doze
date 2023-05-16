@@ -8,6 +8,7 @@ public class Shooter : MonoBehaviour
     const int RecoverySeconds = 3;
 
     int shotPower = MaxShotPower;
+    AudioSource shotSound;
 
     public GameObject[] candyPrefabs; // 配列にしてキャンディをすべて入れる
     public Transform candyParentTransform; // 空のゲームオブジェクト「candies」の位置情報
@@ -19,7 +20,7 @@ public class Shooter : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
-
+        shotSound = GetComponent<AudioSource>();
     }
 
     // Update is called once per frame
@@ -57,6 +58,7 @@ public class Shooter : MonoBehaviour
 
         candyManager.ConsumeCandy(); // 消費
         ConsumePower(); // パワー消費
+        shotSound.Play();
 
         void OnGUI() // 画面出力
         {
