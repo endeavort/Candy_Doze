@@ -35,7 +35,7 @@ public class CandyManager : MonoBehaviour
         string label = "Candy ： " + candy;
         // カウントダウンを表示
         if (counter > 0) label = label + "（" + counter + "s）";
-        GUI.Label(new Rect(50, 50, 100, 30), label);
+        GUI.Label(new Rect(50, 50, 100, 50), label);
     }
     // Start is called before the first frame update
     void Start()
